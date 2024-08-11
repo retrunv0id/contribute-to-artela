@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: List directory contents
-      run: ls -la ./contribute-to-artela
+      run: ls -la
 
     - name: Set up Node.js
       uses: actions/setup-node@v4
@@ -25,12 +25,9 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: ./contribute-to-artela
 
     - name: Build project
       run: npm run build --if-present
-      working-directory: ./contribute-to-artela
 
     - name: Run tests
       run: npm test
-      working-directory: ./contribute-to-artela
