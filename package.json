@@ -1,19 +1,12 @@
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18.x'
-
-    - run: npm install
-      working-directory: ./contribute-to-artela  # Adjust this path if needed
-
-    - run: npm run build --if-present
-      working-directory: ./contribute-to-artela
-
-    - run: npm test
-      working-directory: ./contribute-to-artela
+{
+  "name": "retrunvoid",
+  "version": "1.0.0",
+  "description": "A description of your project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {}
+}
