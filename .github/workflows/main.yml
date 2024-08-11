@@ -1,21 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main  # Adjust this if you use a different default branch
+  pull_request:
+    branches:
+      - main  # This triggers the workflow on pull requests to the main branch
+
 jobs:
   test:
-    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    name: Test on Node.js ${{ matrix.node_version }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         node_version: ['18.x', '20.x']
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node_version }}
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js ${{ matrix.node_version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node_version }}
 
-    - name: npm install, build and test
-      run: |
-        npm install
-        npm run build --if-present
-        npm test
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build the project
+      run: npm run build --if-present
+
+    - name: Run tests
+      run: npm test
+
+    - name: Debugging
+      run: echo "The workflow has reached this point on ${{ matrix.os }} with Node.js ${{ matrix.node_version }}"
