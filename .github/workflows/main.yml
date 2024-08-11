@@ -3,41 +3,35 @@ name: CI
 on:
   push:
     branches:
-      - main  # Adjust this if you use a different default branch
+      - main
   pull_request:
     branches:
-      - main  # This triggers the workflow on pull requests to the main branch
+      - main
 
 jobs:
-  test:
-    name: Test on Node.js ${{ matrix.node_version }} and ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node_version: ['18.x', '20.x']
-        os: [ubuntu-latest, windows-latest, macos-latest]
-
+  build:
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-    - name: Set up Node.js ${{ matrix.node_version }}
+    - name: Cache Node.js modules
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node_version }}
+        node-version: '18.x'
 
-    - name: Install dependencies
-      run: npm install
-      working-directory: ./contribute-to-artela  # Specify the correct directory where package.json is located
+    - run: npm install
+    - run: npm run build --if-present
 
-    - name: Build the project
-      run: npm run build --if-present
-      working-directory: ./contribute-to-artela  # Specify the correct directory
-
-    - name: Run tests
-      run: npm test
-      working-directory: ./contribute-to-artela  # Specify the correct directory
-
-    - name: Debugging
-      run: echo "The workflow has reached this point on ${{ matrix.os }} with Node.js ${{ matrix.node_version }}"
-      working-directory: ./contribute-to-artela  # Specify the correct directory
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-output
+        path: path/to/build/output
